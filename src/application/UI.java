@@ -44,9 +44,8 @@ public class UI {
 			return new ChessPosition(column, row);
 		}
 		catch (RuntimeException e) {
-			throw new InputMismatchException("Posição não existe");
+			throw new InputMismatchException("*Error: Fail in reading ChessPosition. Valid values are from A1 to H8.*");
 		}
-		
 	}
 	
 	public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured) {
@@ -54,9 +53,17 @@ public class UI {
 		System.out.println();
 		printCapturedPieces(captured);
 		System.out.println();
-		System.out.println("turn: " + chessMatch.getTurn());
-		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
-		
+		System.out.println("Turn: " + chessMatch.getTurn());
+		if(!chessMatch.getCheckMate()) {
+			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
+			if(chessMatch.getCheck()) {
+				System.out.println("Check!");
+			}
+		}
+		else {
+			System.out.println("CheckMate!");
+			System.out.println("Winner is " + chessMatch.getCurrentPlayer());
+		}
 	}
 		
 	public static void printBoard(ChessPiece[][] pieces) {
@@ -100,8 +107,8 @@ public class UI {
 	private static void printCapturedPieces(List<ChessPiece> captured) {
 		List<ChessPiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE).collect(Collectors.toList());
 		List<ChessPiece> black = captured.stream().filter(x -> x.getColor() == Color.BLACK).collect(Collectors.toList());
-		System.out.println("captured pieces:");
-		System.out.print("white: ");
+		System.out.println("Captured pieces:");
+		System.out.print("White: ");
 		System.out.print(ANSI_WHITE);
 		System.out.println(Arrays.toString(white.toArray()));
 		System.out.print(ANSI_RESET);
